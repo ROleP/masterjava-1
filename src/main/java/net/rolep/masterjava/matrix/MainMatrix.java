@@ -18,6 +18,13 @@ public class MainMatrix {
         final int[][] matrixA = MatrixUtil.create(MATRIX_SIZE);
         final int[][] matrixB = MatrixUtil.create(MATRIX_SIZE);
 
+/*
+        MatrixUtil.printMatrix(matrixA);
+        System.out.println();
+        MatrixUtil.printMatrix(matrixB);
+        System.out.println();
+*/
+
         double singleThreadSum = 0.;
         double concurrentThreadSum = 0.;
         int count = 1;
