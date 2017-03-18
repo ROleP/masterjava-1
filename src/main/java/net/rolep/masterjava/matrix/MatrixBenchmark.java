@@ -43,7 +43,7 @@ public class MatrixBenchmark {
         Options options = new OptionsBuilder()
                 .include(MatrixBenchmark.class.getSimpleName())
                 .threads(1)
-                .forks(1)
+                .forks(10)
                 .timeout(TimeValue.minutes(5))
                 .build();
         new Runner(options).run();
