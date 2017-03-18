@@ -76,7 +76,6 @@ public class MatrixUtil {
             }
         }
 
-
         List<Callable<int[]>> tasks = new ArrayList<>();
         IntStream.range(0, matrixSize)
                 .forEach(i ->

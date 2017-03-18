@@ -1,8 +1,10 @@
 package net.rolep.masterjava.service;
 
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.*;
+import java.util.stream.Collectors;
 
 public class MailService {
     private static final String OK = "OK";
@@ -11,10 +13,72 @@ public class MailService {
     private static final String INTERRUPTED_BY_TIMEOUT = "+++ Interrupted by timeout";
     private static final String INTERRUPTED_EXCEPTION = "+++ InterruptedException";
 
-    public GroupResult sendToList(final String template, final Set<String> emails) throws Exception {
-        return new GroupResult(0, Collections.emptyList(), null);
-    }
+    private final ExecutorService mailExecutor = Executors.newFixedThreadPool(8);
 
+    public GroupResult sendToList(final String template, final Set<String> emails) throws Exception {
+        final CompletionService<MailResult> completionService = new ExecutorCompletionService<>(mailExecutor);
+
+        List<Future<MailResult>> futures = emails.stream()
+                .map(email -> completionService.submit(() -> sendToUser(template, email)))
+                .collect(Collectors.toList());
+
+        return new Callable<GroupResult>() {
+            private int success = 0;
+            private List<MailResult> failed = new ArrayList<>();
+
+            @Override
+            public GroupResult call() {
+                while (!futures.isEmpty()) {
+                    try {
+                        Future<MailResult> future = completionService.poll(10, TimeUnit.SECONDS);
+                        if (future == null) {
+                            return cancelWithFail(INTERRUPTED_BY_TIMEOUT);
+                        }
+                        futures.remove(future);
+                        MailResult mailResult = future.get();
+                        if (mailResult.isOk()) {
+                            success++;
+                        } else {
+                            failed.add(mailResult);
+                            if (failed.size() >= 5) {
+                                return cancelWithFail(INTERRUPTED_BY_FAULTS_NUMBER);
+                            }
+                        }
+                    } catch (InterruptedException e) {
+                        return cancelWithFail(INTERRUPTED_EXCEPTION);
+                    } catch (ExecutionException e) {
+                        return cancelWithFail(e.getCause().toString());
+                    }
+                }
+/*                for (Future<MailResult> future : futures) {
+                    MailResult mailResult;
+                    try {
+                        mailResult = future.get(10, TimeUnit.SECONDS);
+                    } catch (InterruptedException e) {
+                        return cancelWithFail(INTERRUPTED_EXCEPTION);
+                    } catch (ExecutionException e) {
+                        return cancelWithFail(e.getCause().toString());
+                    } catch (TimeoutException e) {
+                        return cancelWithFail(INTERRUPTED_BY_TIMEOUT);
+                    }
+                    if (mailResult.isOk()) {
+                        success++;
+                    } else {
+                        failed.add(mailResult);
+                        if (failed.size() >= 5) {
+                            return cancelWithFail(INTERRUPTED_BY_FAULTS_NUMBER);
+                        }
+                    }
+                }*/
+                return new GroupResult(success, failed, null);
+            }
+
+            private GroupResult cancelWithFail(String cause) {
+                futures.forEach(f -> f.cancel(true));
+                return new GroupResult(success, failed, cause);
+            }
+        }.call();
+    }
 
     // dummy realization
     public MailResult sendToUser(String template, String email) throws Exception {
@@ -31,6 +95,11 @@ public class MailService {
         private final String email;
         private final String result;
 
+        private MailResult(String email, String cause) {
+            this.email = email;
+            this.result = cause;
+        }
+
         private static MailResult ok(String email) {
             return new MailResult(email, OK);
         }
@@ -41,11 +110,6 @@ public class MailService {
 
         public boolean isOk() {
             return OK.equals(result);
-        }
-
-        private MailResult(String email, String cause) {
-            this.email = email;
-            this.result = cause;
         }
 
         @Override
