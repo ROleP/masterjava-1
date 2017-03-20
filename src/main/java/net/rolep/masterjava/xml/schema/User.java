@@ -1,5 +1,5 @@
 
-package ru.javaops.masterjava.xml.schema;
+package net.rolep.masterjava.xml.schema;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -24,8 +24,8 @@ import javax.xml.bind.annotation.XmlType;
  *         &lt;element name="email" type="{http://www.w3.org/2001/XMLSchema}string"/>
  *         &lt;element name="fullName" type="{http://www.w3.org/2001/XMLSchema}string"/>
  *       &lt;/sequence>
- *       &lt;attribute name="flag" use="required" type="{http://javaops.ru}flagType" />
  *       &lt;attribute name="city" use="required" type="{http://www.w3.org/2001/XMLSchema}IDREF" />
+ *       &lt;attribute name="flag" use="required" type="{http://rolep.net}flagType" />
  *     &lt;/restriction>
  *   &lt;/complexContent>
  * &lt;/complexType>
@@ -38,19 +38,19 @@ import javax.xml.bind.annotation.XmlType;
     "email",
     "fullName"
 })
-@XmlRootElement(name = "User", namespace = "http://javaops.ru")
+@XmlRootElement(name = "User", namespace = "http://rolep.net")
 public class User {
 
-    @XmlElement(namespace = "http://javaops.ru", required = true)
+    @XmlElement(namespace = "http://rolep.net", required = true)
     protected String email;
-    @XmlElement(namespace = "http://javaops.ru", required = true)
+    @XmlElement(namespace = "http://rolep.net", required = true)
     protected String fullName;
-    @XmlAttribute(name = "flag", required = true)
-    protected FlagType flag;
     @XmlAttribute(name = "city", required = true)
     @XmlIDREF
     @XmlSchemaType(name = "IDREF")
     protected Object city;
+    @XmlAttribute(name = "flag", required = true)
+    protected FlagType flag;
 
     /**
      * Gets the value of the email property.
@@ -101,30 +101,6 @@ public class User {
     }
 
     /**
-     * Gets the value of the flag property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link FlagType }
-     *     
-     */
-    public FlagType getFlag() {
-        return flag;
-    }
-
-    /**
-     * Sets the value of the flag property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link FlagType }
-     *     
-     */
-    public void setFlag(FlagType value) {
-        this.flag = value;
-    }
-
-    /**
      * Gets the value of the city property.
      * 
      * @return
@@ -146,6 +122,30 @@ public class User {
      */
     public void setCity(Object value) {
         this.city = value;
+    }
+
+    /**
+     * Gets the value of the flag property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link FlagType }
+     *     
+     */
+    public FlagType getFlag() {
+        return flag;
+    }
+
+    /**
+     * Sets the value of the flag property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link FlagType }
+     *     
+     */
+    public void setFlag(FlagType value) {
+        this.flag = value;
     }
 
 }
