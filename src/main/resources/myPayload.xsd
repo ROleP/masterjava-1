@@ -43,7 +43,10 @@
         <xs:complexType>
             <xs:sequence>
                 <xs:element type="xs:string" name="fullName"/>
-                <xs:element name="Groups" type="xs:IDREFS" minOccurs="0" maxOccurs="1">
+                <xs:element name="groups" minOccurs="0" maxOccurs="1">
+                <xs:simpleType>
+                    <xs:list itemType="xs:string"/>
+                </xs:simpleType>
                 </xs:element>
             </xs:sequence>
             <xs:attribute type="xs:IDREF" name="city" use="required"/>
@@ -53,6 +56,26 @@
     </xs:element>
 
     <xs:element name="Project">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="name" type="xs:string" minOccurs="1" maxOccurs="1"/>
+                <xs:element name="description" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="Group">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="name" type="xs:string" maxOccurs="1" minOccurs="1"/>
+                <xs:element name="description" type="xs:string" minOccurs="0" maxOccurs="1"/>
+                <xs:element name="project" type="xs:string" maxOccurs="1" minOccurs="1"/>
+            </xs:sequence>
+            <xs:attribute type="groupType" name="groupType" use="required"/>
+        </xs:complexType>
+    </xs:element>
+
+<!--    <xs:element name="Project">
         <xs:complexType>
             <xs:sequence>
                 <xs:element name="name">
@@ -67,9 +90,9 @@
                 <xs:element type="xs:string" name="description" minOccurs="0"/>
             </xs:sequence>
         </xs:complexType>
-    </xs:element>
+    </xs:element>-->
 
-    <xs:element name="Group">
+<!--    <xs:element name="Group">
         <xs:complexType>
             <xs:sequence>
                 <xs:element name="name">
@@ -86,7 +109,7 @@
             </xs:sequence>
             <xs:attribute type="groupType" name="type" use="required"/>
         </xs:complexType>
-    </xs:element>
+    </xs:element>-->
 
     <xs:simpleType name="flagType">
         <xs:restriction base="xs:string">

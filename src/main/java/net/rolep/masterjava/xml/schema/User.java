@@ -25,7 +25,11 @@ import javax.xml.bind.annotation.XmlType;
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
  *         &lt;element name="fullName" type="{http://www.w3.org/2001/XMLSchema}string"/>
- *         &lt;element name="Groups" type="{http://www.w3.org/2001/XMLSchema}IDREFS" minOccurs="0"/>
+ *         &lt;element name="groups" minOccurs="0">
+ *           &lt;simpleType>
+ *             &lt;list itemType="{http://www.w3.org/2001/XMLSchema}string" />
+ *           &lt;/simpleType>
+ *         &lt;/element>
  *       &lt;/sequence>
  *       &lt;attribute name="city" use="required" type="{http://www.w3.org/2001/XMLSchema}IDREF" />
  *       &lt;attribute name="flag" use="required" type="{http://rolep.net}flagType" />
@@ -48,10 +52,8 @@ public class User {
     @XmlElement(namespace = "http://rolep.net", required = true)
     protected String fullName;
     @XmlList
-    @XmlElement(name = "Groups", namespace = "http://rolep.net")
-    @XmlIDREF
-    @XmlSchemaType(name = "IDREFS")
-    protected List<Object> groups;
+    @XmlElement(namespace = "http://rolep.net")
+    protected List<String> groups;
     @XmlAttribute(name = "city", required = true)
     @XmlIDREF
     @XmlSchemaType(name = "IDREF")
@@ -103,13 +105,13 @@ public class User {
      * 
      * <p>
      * Objects of the following type(s) are allowed in the list
-     * {@link Object }
+     * {@link String }
      * 
      * 
      */
-    public List<Object> getGroups() {
+    public List<String> getGroups() {
         if (groups == null) {
-            groups = new ArrayList<Object>();
+            groups = new ArrayList<String>();
         }
         return this.groups;
     }

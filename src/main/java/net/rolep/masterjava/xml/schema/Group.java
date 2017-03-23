@@ -5,14 +5,8 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlID;
-import javax.xml.bind.annotation.XmlIDREF;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlSchemaType;
 import javax.xml.bind.annotation.XmlType;
-import javax.xml.bind.annotation.XmlValue;
-import javax.xml.bind.annotation.adapters.CollapsedStringAdapter;
-import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 
 /**
@@ -25,19 +19,11 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
- *         &lt;element name="name">
- *           &lt;complexType>
- *             &lt;simpleContent>
- *               &lt;extension base="&lt;http://www.w3.org/2001/XMLSchema>string">
- *                 &lt;attribute name="groupID" use="required" type="{http://www.w3.org/2001/XMLSchema}ID" />
- *               &lt;/extension>
- *             &lt;/simpleContent>
- *           &lt;/complexType>
- *         &lt;/element>
+ *         &lt;element name="name" type="{http://www.w3.org/2001/XMLSchema}string"/>
  *         &lt;element name="description" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
- *         &lt;element name="projectID" type="{http://www.w3.org/2001/XMLSchema}IDREF" minOccurs="0"/>
+ *         &lt;element name="project" type="{http://www.w3.org/2001/XMLSchema}string"/>
  *       &lt;/sequence>
- *       &lt;attribute name="type" use="required" type="{http://rolep.net}groupType" />
+ *       &lt;attribute name="groupType" use="required" type="{http://rolep.net}groupType" />
  *     &lt;/restriction>
  *   &lt;/complexContent>
  * &lt;/complexType>
@@ -49,31 +35,29 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 @XmlType(name = "", propOrder = {
     "name",
     "description",
-    "projectID"
+    "project"
 })
 @XmlRootElement(name = "Group", namespace = "http://rolep.net")
 public class Group {
 
     @XmlElement(namespace = "http://rolep.net", required = true)
-    protected Group.Name name;
+    protected String name;
     @XmlElement(namespace = "http://rolep.net")
     protected String description;
-    @XmlElement(namespace = "http://rolep.net")
-    @XmlIDREF
-    @XmlSchemaType(name = "IDREF")
-    protected Object projectID;
-    @XmlAttribute(name = "type", required = true)
-    protected GroupType type;
+    @XmlElement(namespace = "http://rolep.net", required = true)
+    protected String project;
+    @XmlAttribute(name = "groupType", required = true)
+    protected GroupType groupType;
 
     /**
      * Gets the value of the name property.
      * 
      * @return
      *     possible object is
-     *     {@link Group.Name }
+     *     {@link String }
      *     
      */
-    public Group.Name getName() {
+    public String getName() {
         return name;
     }
 
@@ -82,10 +66,10 @@ public class Group {
      * 
      * @param value
      *     allowed object is
-     *     {@link Group.Name }
+     *     {@link String }
      *     
      */
-    public void setName(Group.Name value) {
+    public void setName(String value) {
         this.name = value;
     }
 
@@ -114,133 +98,51 @@ public class Group {
     }
 
     /**
-     * Gets the value of the projectID property.
+     * Gets the value of the project property.
      * 
      * @return
      *     possible object is
-     *     {@link Object }
+     *     {@link String }
      *     
      */
-    public Object getProjectID() {
-        return projectID;
+    public String getProject() {
+        return project;
     }
 
     /**
-     * Sets the value of the projectID property.
+     * Sets the value of the project property.
      * 
      * @param value
      *     allowed object is
-     *     {@link Object }
+     *     {@link String }
      *     
      */
-    public void setProjectID(Object value) {
-        this.projectID = value;
+    public void setProject(String value) {
+        this.project = value;
     }
 
     /**
-     * Gets the value of the type property.
+     * Gets the value of the groupType property.
      * 
      * @return
      *     possible object is
      *     {@link GroupType }
      *     
      */
-    public GroupType getType() {
-        return type;
+    public GroupType getGroupType() {
+        return groupType;
     }
 
     /**
-     * Sets the value of the type property.
+     * Sets the value of the groupType property.
      * 
      * @param value
      *     allowed object is
      *     {@link GroupType }
      *     
      */
-    public void setType(GroupType value) {
-        this.type = value;
-    }
-
-
-    /**
-     * <p>Java class for anonymous complex type.
-     * 
-     * <p>The following schema fragment specifies the expected content contained within this class.
-     * 
-     * <pre>
-     * &lt;complexType>
-     *   &lt;simpleContent>
-     *     &lt;extension base="&lt;http://www.w3.org/2001/XMLSchema>string">
-     *       &lt;attribute name="groupID" use="required" type="{http://www.w3.org/2001/XMLSchema}ID" />
-     *     &lt;/extension>
-     *   &lt;/simpleContent>
-     * &lt;/complexType>
-     * </pre>
-     * 
-     * 
-     */
-    @XmlAccessorType(XmlAccessType.FIELD)
-    @XmlType(name = "", propOrder = {
-        "value"
-    })
-    public static class Name {
-
-        @XmlValue
-        protected String value;
-        @XmlAttribute(name = "groupID", required = true)
-        @XmlJavaTypeAdapter(CollapsedStringAdapter.class)
-        @XmlID
-        @XmlSchemaType(name = "ID")
-        protected String groupID;
-
-        /**
-         * Gets the value of the value property.
-         * 
-         * @return
-         *     possible object is
-         *     {@link String }
-         *     
-         */
-        public String getValue() {
-            return value;
-        }
-
-        /**
-         * Sets the value of the value property.
-         * 
-         * @param value
-         *     allowed object is
-         *     {@link String }
-         *     
-         */
-        public void setValue(String value) {
-            this.value = value;
-        }
-
-        /**
-         * Gets the value of the groupID property.
-         * 
-         * @return
-         *     possible object is
-         *     {@link String }
-         *     
-         */
-        public String getGroupID() {
-            return groupID;
-        }
-
-        /**
-         * Sets the value of the groupID property.
-         * 
-         * @param value
-         *     allowed object is
-         *     {@link String }
-         *     
-         */
-        public void setGroupID(String value) {
-            this.groupID = value;
-        }
-
+    public void setGroupType(GroupType value) {
+        this.groupType = value;
     }
 
 }
