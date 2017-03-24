@@ -90,8 +90,12 @@ public class MainXml {
                 int event = reader.next();
                 if (event == XMLEvent.START_ELEMENT) {
                     if ("Projects".equals(reader.getLocalName())) {
-                        do {
-                            tagName = reader.getName();
+                        while (true) {
+                            event = reader.nextTag();
+                            if (event == XMLEvent.END_ELEMENT && reader.getLocalName().equals("Projects")) {break;}
+                            if (event == XMLEvent.START_ELEMENT && reader.getLocalName().equals("Project")) {
+
+                            }
                         }
                     } else if ("Groups".equals(reader.getLocalName())) {
 
