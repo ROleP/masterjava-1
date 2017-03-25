@@ -18,6 +18,8 @@
         <jmh.version>1.18</jmh.version>
         <guava.version>21.0</guava.version>
         <junit.version>4.12</junit.version>
+        <streamex.version>0.6.5</streamex.version>
+        <j2html.version>0.88</j2html.version>
     </properties>
 
     <build>
@@ -112,6 +114,21 @@
             <version>${guava.version}</version>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/one.util/streamex -->
+        <dependency>
+            <groupId>one.util</groupId>
+            <artifactId>streamex</artifactId>
+            <version>${streamex.version}</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/com.j2html/j2html -->
+        <dependency>
+            <groupId>com.j2html</groupId>
+            <artifactId>j2html</artifactId>
+            <version>${j2html.version}</version>
+        </dependency>
+
+        <!--Test-->
         <!-- https://mvnrepository.com/artifact/junit/junit -->
         <dependency>
             <groupId>junit</groupId>
