@@ -11,6 +11,7 @@ import net.rolep.masterjava.xml.schema.User;
 import net.rolep.masterjava.xml.util.JaxbParser;
 import net.rolep.masterjava.xml.util.Schemas;
 import net.rolep.masterjava.xml.util.StaxStreamProcessor;
+import net.rolep.masterjava.xml.util.XsltProcessor;
 import one.util.streamex.StreamEx;
 
 import javax.xml.stream.events.XMLEvent;
@@ -56,6 +57,12 @@ public class MainXml {
         System.out.println();
         users = processByStax(projectName, payloadUrl);
         users.forEach(System.out::println);
+
+        html = transform(projectName, payloadUrl);
+        System.out.println(html);
+        try (Writer writer = Files.newBufferedWriter(Paths.get("out/myGroupsXslt.html"))) {
+            writer.write(html);
+        }
     }
 
     private static Set<User> parseByJaxb(String projectName, URL payloadUrl) throws Exception {
@@ -127,6 +134,15 @@ public class MainXml {
                 }
             }
             return users;
+        }
+    }
+
+    private static String transform(String projectName, URL payloadUrl) throws Exception {
+        URL xsl = Resources.getResource("myGroups.xsl");
+        try (InputStream xmlStream = payloadUrl.openStream(); InputStream xslStream = xsl.openStream()) {
+            XsltProcessor processor = new XsltProcessor(xslStream);
+            processor.setParameter("projectName", projectName);
+            return processor.transform(xmlStream);
         }
     }
 }
