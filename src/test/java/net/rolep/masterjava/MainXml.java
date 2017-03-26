@@ -1,4 +1,4 @@
-package net.rolep.masterjava.xml;
+package net.rolep.masterjava;
 
 import com.google.common.base.Splitter;
 import com.google.common.base.Strings;
@@ -39,7 +39,7 @@ public class MainXml {
 
     public static void main(String[] args) throws Exception {
         if (args.length != 1) {
-            System.out.println("Format: projectName, xmlName");
+            System.out.println("Format: projectName");
             System.exit(1);
         }
         URL payloadUrl = Resources.getResource("myPayload.xml");
@@ -59,7 +59,6 @@ public class MainXml {
         users.forEach(System.out::println);
 
         html = transform(projectName, payloadUrl);
-        System.out.println(html);
         try (Writer writer = Files.newBufferedWriter(Paths.get("out/myGroupsXslt.html"))) {
             writer.write(html);
         }
