@@ -1,5 +1,7 @@
 package ru.javaops.masterjava;
 
+import com.google.common.base.Splitter;
+import com.google.common.base.Strings;
 import com.google.common.io.Resources;
 import j2html.tags.ContainerTag;
 import one.util.streamex.StreamEx;
@@ -9,7 +11,10 @@ import ru.javaops.masterjava.xml.schema.Project;
 import ru.javaops.masterjava.xml.schema.User;
 import ru.javaops.masterjava.xml.util.JaxbParser;
 import ru.javaops.masterjava.xml.util.Schemas;
+import ru.javaops.masterjava.xml.util.StaxStreamProcessor;
 
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.events.XMLEvent;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Writer;
@@ -31,6 +36,9 @@ import static j2html.TagCreator.*;
 public class MainXml {
 
     public static final Comparator<User> USER_COMPARATOR = Comparator.comparing(User::getValue).thenComparing(User::getEmail);
+    public static final String PROJECT = "Project";
+    public static final String USERS = "Users";
+    public static final String GROUP = "Group";
 
     public static void main(String[] args) throws Exception {
         if (args.length != 1) {
@@ -48,6 +56,10 @@ public class MainXml {
         try (Writer writer = Files.newBufferedWriter(Paths.get("out/users.html"))) {
             writer.write(html);
         }
+
+        System.out.println();
+        users = processByStax(projectName, payloadUrl);
+        users.forEach(System.out::println);
     }
 
     private static Set<User> parseByJaxb(String projectName, URL payloadUrl) throws Exception {
@@ -82,6 +94,44 @@ public class MainXml {
                 head().with(title(projectName + " users")),
                 body().with(h1(projectName + " users"), table)
         ).render();
+    }
+
+    private static Set<User> processByStax(String projectName, URL payloadUrl) throws Exception {
+        try (InputStream is = payloadUrl.openStream()) {
+            StaxStreamProcessor processor = new StaxStreamProcessor(is);
+            Set<String> groupNames = new HashSet<>();
+            Set<User> users = new TreeSet<>(USER_COMPARATOR);
+            String element;
+
+            // Projects loop
+            projects:
+            while (processor.doUntil(XMLEvent.START_ELEMENT, PROJECT)) {
+                if (projectName.equals(processor.getAttribute("name"))) {
+                    // Groups loop
+                    while ((element = processor.doUntilAny(XMLEvent.START_ELEMENT, GROUP, USERS)) != null) {
+                        if (!element.equals(GROUP)) {
+                            break projects;
+                        }
+                        groupNames.add(processor.getAttribute("name"));
+                    }
+                }
+            }
+            if (groupNames.isEmpty()) {
+                throw new IllegalArgumentException("Invalid " + projectName + " or no groups");
+            }
+
+            // Users loop
+            while (processor.doUntil(XMLEvent.START_ELEMENT, "User")) {
+                String groupRefs = processor.getAttribute("groupRefs");
+                if (!Collections.disjoint(groupNames, Splitter.on(' ').splitToList(Strings.nullToEmpty(groupRefs)))) {
+                    User user = new User();
+                    user.setEmail(processor.getAttribute("email"));
+                    user.setValue(processor.getReader().getElementText());
+                    users.add(user);
+                }
+            }
+            return users;
+        }
     }
 }
 
