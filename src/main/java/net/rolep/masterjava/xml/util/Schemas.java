@@ -28,7 +28,7 @@ public class Schemas {
     }
 
     public static synchronized Schema ofClasspath(String resource) {
-        return ofURL(Resources.getResource(Schema.class, resource));
+        return ofURL(Resources.getResource(resource));
     }
 
     public static synchronized Schema ofURL(URL url) {

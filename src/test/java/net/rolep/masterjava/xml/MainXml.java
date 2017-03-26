@@ -1,17 +1,17 @@
-package ru.javaops.masterjava;
+package net.rolep.masterjava.xml;
 
 import com.google.common.base.Splitter;
 import com.google.common.base.Strings;
 import com.google.common.io.Resources;
 import j2html.tags.ContainerTag;
+import net.rolep.masterjava.xml.schema.ObjectFactory;
+import net.rolep.masterjava.xml.schema.Payload;
+import net.rolep.masterjava.xml.schema.Project;
+import net.rolep.masterjava.xml.schema.User;
+import net.rolep.masterjava.xml.util.JaxbParser;
+import net.rolep.masterjava.xml.util.Schemas;
+import net.rolep.masterjava.xml.util.StaxStreamProcessor;
 import one.util.streamex.StreamEx;
-import ru.javaops.masterjava.xml.schema.ObjectFactory;
-import ru.javaops.masterjava.xml.schema.Payload;
-import ru.javaops.masterjava.xml.schema.Project;
-import ru.javaops.masterjava.xml.schema.User;
-import ru.javaops.masterjava.xml.util.JaxbParser;
-import ru.javaops.masterjava.xml.util.Schemas;
-import ru.javaops.masterjava.xml.util.StaxStreamProcessor;
 
 import javax.xml.stream.events.XMLEvent;
 import java.io.IOException;
@@ -41,7 +41,7 @@ public class MainXml {
             System.out.println("Format: projectName, xmlName");
             System.exit(1);
         }
-        URL payloadUrl = Resources.getResource("payload.xml");
+        URL payloadUrl = Resources.getResource("myPayload.xml");
         String projectName = args[0];
 
         Set<User> users = parseByJaxb(projectName, payloadUrl);
@@ -49,7 +49,7 @@ public class MainXml {
 
         String html = toHtml(users, projectName);
         System.out.println(html);
-        try (Writer writer = Files.newBufferedWriter(Paths.get("out/users.html"))) {
+        try (Writer writer = Files.newBufferedWriter(Paths.get("out/myUsers.html"))) {
             writer.write(html);
         }
 
@@ -60,7 +60,7 @@ public class MainXml {
 
     private static Set<User> parseByJaxb(String projectName, URL payloadUrl) throws Exception {
         JaxbParser parser = new JaxbParser(ObjectFactory.class);
-        parser.setSchema(Schemas.ofClasspath("payload.xsd"));
+        parser.setSchema(Schemas.ofClasspath("myPayload.xsd"));
         Payload payload;
         try (InputStream is = payloadUrl.openStream()) {
             payload = parser.unmarshal(is);
@@ -130,4 +130,3 @@ public class MainXml {
         }
     }
 }
-
