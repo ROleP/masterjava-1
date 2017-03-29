@@ -4,13 +4,26 @@
 
     <groupId>ru.javaops</groupId>
     <artifactId>masterjava</artifactId>
-    <packaging>jar</packaging>
+    <packaging>pom</packaging>
 
     <version>1.0-SNAPSHOT</version>
 
     <name>Master Java</name>
     <url>https://github.com/JavaOPs/masterjava</url>
 
+    <modules>
+        <module>export</module>
+        <module>common</module>
+
+        <module>test</module>
+        <module>web</module>
+        <module>services</module>
+        <module>mail-service</module>
+        <module>mail-api</module>
+
+    </modules>
+
+<!--
     <properties>
         <java.version>1.8</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -35,7 +48,7 @@
                     <target>${java.version}</target>
                 </configuration>
             </plugin>
-            <!-- https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-surefire-plugin -->
+            &lt;!&ndash; https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-surefire-plugin &ndash;&gt;
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
@@ -63,10 +76,10 @@
                             </transformers>
                             <filters>
                                 <filter>
-                                    <!--
+                                    &lt;!&ndash;
                                         Shading signed JARs will fail without this.
                                         http://stackoverflow.com/questions/999489/invalid-signature-file-when-attempting-to-run-a-jar
-                                    -->
+                                    &ndash;&gt;
                                     <artifact>*:*</artifact>
                                     <excludes>
                                         <exclude>META-INF/*.SF</exclude>
@@ -85,21 +98,21 @@
 
     <dependencies>
 
-        <!-- https://mvnrepository.com/artifact/javax.servlet/javax.servlet-api -->
+        &lt;!&ndash; https://mvnrepository.com/artifact/javax.servlet/javax.servlet-api &ndash;&gt;
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>javax.servlet-api</artifactId>
             <version>4.0.0-b03</version>
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/org.openjdk.jmh/jmh-core -->
+        &lt;!&ndash; https://mvnrepository.com/artifact/org.openjdk.jmh/jmh-core &ndash;&gt;
         <dependency>
             <groupId>org.openjdk.jmh</groupId>
             <artifactId>jmh-core</artifactId>
             <version>${jmh.version}</version>
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/org.openjdk.jmh/jmh-generator-annprocess -->
+        &lt;!&ndash; https://mvnrepository.com/artifact/org.openjdk.jmh/jmh-generator-annprocess &ndash;&gt;
         <dependency>
             <groupId>org.openjdk.jmh</groupId>
             <artifactId>jmh-generator-annprocess</artifactId>
@@ -107,29 +120,29 @@
             <scope>provided</scope>
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/com.google.guava/guava -->
+        &lt;!&ndash; https://mvnrepository.com/artifact/com.google.guava/guava &ndash;&gt;
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
             <version>${guava.version}</version>
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/one.util/streamex -->
+        &lt;!&ndash; https://mvnrepository.com/artifact/one.util/streamex &ndash;&gt;
         <dependency>
             <groupId>one.util</groupId>
             <artifactId>streamex</artifactId>
             <version>${streamex.version}</version>
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/com.j2html/j2html -->
+        &lt;!&ndash; https://mvnrepository.com/artifact/com.j2html/j2html &ndash;&gt;
         <dependency>
             <groupId>com.j2html</groupId>
             <artifactId>j2html</artifactId>
             <version>${j2html.version}</version>
         </dependency>
 
-        <!--Test-->
-        <!-- https://mvnrepository.com/artifact/junit/junit -->
+        &lt;!&ndash;Test&ndash;&gt;
+        &lt;!&ndash; https://mvnrepository.com/artifact/junit/junit &ndash;&gt;
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
@@ -143,5 +156,5 @@
     </profiles>
 
     <dependencyManagement>
-    </dependencyManagement>
+    </dependencyManagement>-->
 </project>
