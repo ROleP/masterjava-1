@@ -13,6 +13,7 @@
     <modules>
         <module>export</module>
         <module>webapp</module>
+        <module>common-web</module>
     </modules>
 
 </project>
