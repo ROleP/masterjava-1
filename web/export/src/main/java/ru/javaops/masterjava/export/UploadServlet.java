@@ -1,54 +1,46 @@
 package ru.javaops.masterjava.export;
 
-import org.apache.commons.fileupload.FileItem;
-import org.apache.commons.fileupload.FileItemIterator;
-import org.apache.commons.fileupload.FileItemStream;
-import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.thymeleaf.context.WebContext;
 import ru.javaops.masterjava.model.User;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.Part;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
-import static ru.javaops.masterjava.export.ThymeleafListener.*;
+import static ru.javaops.masterjava.export.ThymeleafListener.engine;
 
 /**
  * Created by rolep on 03/04/17.
  */
 @WebServlet("/")
+@MultipartConfig
 public class UploadServlet extends HttpServlet {
 
     private final UserExport userExport = new UserExport();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        final WebContext webContext = new WebContext(req, resp, req.getServletContext(),req.getLocale());
+        final WebContext webContext = new WebContext(req, resp, req.getServletContext(), req.getLocale());
         engine.process("export", webContext, resp.getWriter());
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        final ServletFileUpload upload = new ServletFileUpload();
         final WebContext webContext = new WebContext(req, resp, req.getServletContext(), req.getLocale());
 
         try {
-            final FileItemIterator itemIterator = upload.getItemIterator(req);
-            while (itemIterator.hasNext()) {
-                FileItemStream fileItemStream = itemIterator.next();
-                if (!fileItemStream.isFormField()) {
-                    try (InputStream is = fileItemStream.openStream()) {
-                        List<User> users = userExport.process(is);
-                        webContext.setVariable("users", users);
-                        engine.process("result", webContext, resp.getWriter());
-                    }
-                    break;
-                }
+            Part filePart = req.getPart("fileToUpload");
+            try (InputStream is = filePart.getInputStream()) {
+                List<User> users = userExport.process(is);
+                webContext.setVariable("users", users);
+                engine.process("result", webContext, resp.getWriter());
             }
         } catch (Exception e) {
             webContext.setVariable("exception", e);
