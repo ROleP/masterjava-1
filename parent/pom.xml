@@ -15,9 +15,12 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <dependency.locations.enabled>false</dependency.locations.enabled>
+        <masterjava.config>${user.home}/apps/masterjava/config/</masterjava.config>
         <guava.version>21.0</guava.version>
         <junit.version>4.12</junit.version>
         <streamex.version>0.6.5</streamex.version>
+        <logback.version>1.2.3</logback.version>
+        <slf4j.version>1.7.25</slf4j.version>
     </properties>
 
     <build>
@@ -60,6 +63,18 @@
                 </executions>
             </plugin>
         </plugins>
+
+        <testResources>
+            <testResource>
+                <directory>${masterjava.config}</directory>
+                <includes>
+                    <include>logback-test.xml</include>
+                </includes>
+            </testResource>
+            <testResource>
+                <directory>src/test/resources</directory>
+            </testResource>
+        </testResources>
     </build>
 
     <dependencies>
@@ -85,6 +100,23 @@
             <artifactId>junit</artifactId>
             <version>${junit.version}</version>
             <scope>test</scope>
+        </dependency>
+
+        <!-- Logging with slf4j and logback -->
+        <!-- https://mvnrepository.com/artifact/org.slf4j/jcl-over-slf4j -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>jcl-over-slf4j</artifactId>
+            <version>${slf4j.version}</version>
+            <scope>runtime</scope>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/ch.qos.logback/logback-classic -->
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>${logback.version}</version>
+            <scope>runtime</scope>
         </dependency>
 
     </dependencies>
