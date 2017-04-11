@@ -1,30 +1,32 @@
-package ru.javaops.masterjava.model;
+package ru.javaops.masterjava.persist.model;
+
+import com.bertoncelj.jdbi.entitymapper.Column;
 
 import java.util.Objects;
 
 /**
  * Created by rolep on 03/04/17.
  */
-public class User {
+public class User extends BaseEntity {
 
-    private final Integer id;
-    private final String fullName;
-    private final String email;
-    private final UserFlag flag;
+    @Column("full_name")
+    private String fullName;
+
+    private String email;
+
+    private UserFlag flag;
+
+    public User() {}
 
     public User(String fullName, String email, UserFlag flag) {
         this(null, fullName, email, flag);
     }
 
     public User(Integer id, String fullName, String email, UserFlag flag) {
-        this.id = id;
+        super(id);
         this.fullName = fullName;
         this.email = email;
         this.flag = flag;
-    }
-
-    public Integer getId() {
-        return id;
     }
 
     public String getFullName() {
@@ -37,6 +39,22 @@ public class User {
 
     public UserFlag getFlag() {
         return flag;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setFlag(UserFlag flag) {
+        this.flag = flag;
     }
 
     @Override
