@@ -15,8 +15,9 @@ import java.io.InputStream;
 import java.util.List;
 
 import static ru.javaops.masterjava.export.ThymeleafListener.engine;
+import static ru.javaops.masterjava.export.UserController.insert;
 
-@WebServlet("/")
+@WebServlet("/export")
 @MultipartConfig
 public class UploadServlet extends HttpServlet {
 
@@ -37,8 +38,14 @@ public class UploadServlet extends HttpServlet {
             Part filePart = req.getPart("fileToUpload");
             try (InputStream is = filePart.getInputStream()) {
                 List<User> users = userExport.process(is);
-                webContext.setVariable("users", users);
-                engine.process("result", webContext, resp.getWriter());
+                if (req.getParameterValues("showOnly") == null) {
+                    int batchSize = Integer.parseInt(req.getParameter("batchSize"));
+                    insert(batchSize, users);
+                    resp.sendRedirect("/");
+                } else {
+                    webContext.setVariable("users", users);
+                    engine.process("result", webContext, resp.getWriter());
+                }
             }
         } catch (Exception e) {
             webContext.setVariable("exception", e);
