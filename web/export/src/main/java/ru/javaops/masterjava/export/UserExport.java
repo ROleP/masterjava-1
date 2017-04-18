@@ -1,5 +1,6 @@
 package ru.javaops.masterjava.export;
 
+import one.util.streamex.IntStreamEx;
 import ru.javaops.masterjava.persist.DBIProvider;
 import ru.javaops.masterjava.persist.dao.UserDao;
 import ru.javaops.masterjava.persist.model.User;
@@ -31,7 +32,11 @@ public class UserExport {
             final User user = new User(fullName, email, flag);
             users.add(user);
         }
-        userDao.insertBatch(users, chunkSize);
-        return users;
+
+        int[] result = userDao.insertBatch(users, chunkSize);
+        return IntStreamEx.range(0, users.size())
+                .filter(i -> result[i] == 0)
+                .mapToObj(users::get)
+                .toList();
     }
 }
