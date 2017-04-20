@@ -25,9 +25,9 @@ import java.util.concurrent.Future;
  */
 @Slf4j
 public class UserExport {
-    private UserDao userDao = DBIProvider.getDao(UserDao.class);
+    private final UserDao userDao = DBIProvider.getDao(UserDao.class);
     public static final int NUMBER_THREADS = 4;
-    private ExecutorService executorService = Executors.newFixedThreadPool(NUMBER_THREADS);
+    private final ExecutorService executorService = Executors.newFixedThreadPool(NUMBER_THREADS);
 
     @Value
     public static class FailedEmail {
@@ -99,7 +99,7 @@ public class UserExport {
 
             private ChunkFuture submit(List<User> chunk) {
                 ChunkFuture chunkFuture = new ChunkFuture(chunk, executorService.submit(() ->
-                        userDao.insertAndGetAlreadyPresent(chunk)));
+                        userDao.insertAndGetConflictEmails(chunk)));
                 log.info("Submit: " + chunkFuture.emailRange);
                 return chunkFuture;
             }

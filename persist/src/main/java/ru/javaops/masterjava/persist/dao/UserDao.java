@@ -58,7 +58,7 @@ public abstract class UserDao implements AbstractDao {
             "ON CONFLICT DO NOTHING")
     public abstract int[] insertBatch(@BindBean List<User> users, @BatchChunkSize int chunkSize);
 
-    public List<String> insertAndGetAlreadyPresent(List<User> users) {
+    public List<String> insertAndGetConflictEmails(List<User> users) {
         int[] result = insertBatch(users, users.size());
         return IntStreamEx.range(0, users.size())
                 .filter(i -> result[i] == 0)
