@@ -1,6 +1,5 @@
 package ru.javaops.masterjava.export;
 
-import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
 import one.util.streamex.StreamEx;
 import ru.javaops.masterjava.persist.DBIProvider;
@@ -11,7 +10,6 @@ import ru.javaops.masterjava.xml.util.StaxStreamProcessor;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.events.XMLEvent;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -24,27 +22,16 @@ import java.util.concurrent.Future;
  * 14.10.2016
  */
 @Slf4j
-public class UserExport {
+public class UserImporter {
 
     private static final int NUMBER_THREADS = 4;
     private final ExecutorService executorService = Executors.newFixedThreadPool(NUMBER_THREADS);
     private final UserDao userDao = DBIProvider.getDao(UserDao.class);
 
-    @Value
-    public static class FailedEmail {
-        public String emailOrRange;
-        public String reason;
-
-        @Override
-        public String toString() {
-            return emailOrRange + " : " + reason;
-        }
-    }
-
-    public List<FailedEmail> process(final InputStream is, int chunkSize) throws XMLStreamException {
+    public List<PayloadImporter.FailedEmail> process(StaxStreamProcessor processor, int chunkSize) throws XMLStreamException {
         log.info("Start proseccing with chunkSize=" + chunkSize);
 
-        return new Callable<List<FailedEmail>>() {
+        return new Callable<List<PayloadImporter.FailedEmail>>() {
             class ChunkFuture {
                 String emailRange;
                 Future<List<String>> future;
@@ -59,12 +46,11 @@ public class UserExport {
             }
 
             @Override
-            public List<FailedEmail> call() throws XMLStreamException {
+            public List<PayloadImporter.FailedEmail> call() throws XMLStreamException {
                 List<ChunkFuture> futures = new ArrayList<>();
 
                 int id = userDao.getSeqAndSkip(chunkSize);
                 List<User> chunk = new ArrayList<>(chunkSize);
-                final StaxStreamProcessor processor = new StaxStreamProcessor(is);
 
                 while (processor.doUntil(XMLEvent.START_ELEMENT, "User")) {
                     final String email = processor.getAttribute("email");
@@ -83,14 +69,14 @@ public class UserExport {
                     futures.add(submit(chunk));
                 }
 
-                List<FailedEmail> failed = new ArrayList<>();
+                List<PayloadImporter.FailedEmail> failed = new ArrayList<>();
                 futures.forEach(cf -> {
                     try {
-                        failed.addAll(StreamEx.of(cf.future.get()).map(email -> new FailedEmail(email, "already present")).toList());
+                        failed.addAll(StreamEx.of(cf.future.get()).map(email -> new PayloadImporter.FailedEmail(email, "already present")).toList());
                         log.info(cf.emailRange + " successfully executed");
                     } catch (Exception e) {
                         log.error(cf.emailRange + " failed", e);
-                        failed.add(new FailedEmail(cf.emailRange, e.toString()));
+                        failed.add(new PayloadImporter.FailedEmail(cf.emailRange, e.toString()));
                     }
                 });
                 return failed;
