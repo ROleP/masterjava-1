@@ -1,6 +1,7 @@
 package ru.javaops.masterjava.export;
 
 import lombok.Value;
+import lombok.val;
 import ru.javaops.masterjava.xml.util.StaxStreamProcessor;
 
 import javax.xml.stream.XMLStreamException;
@@ -13,6 +14,7 @@ import java.util.List;
 public class PayloadImporter {
 
     private final UserImporter userImporter = new UserImporter();
+    private final CityImporter cityImporter = new CityImporter();
 
     @Value
     public static class FailedEmail {
@@ -26,7 +28,8 @@ public class PayloadImporter {
     }
 
     public List<FailedEmail> process(InputStream is, int chunckSize) throws XMLStreamException {
-        final StaxStreamProcessor processor = new StaxStreamProcessor(is);
-        return userImporter.process(processor, chunckSize);
+        val processor = new StaxStreamProcessor(is);
+        val cities = cityImporter.process(processor);
+        return userImporter.process(processor, cities, chunckSize);
     }
 }
