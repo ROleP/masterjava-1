@@ -22,5 +22,24 @@
             <artifactId>mail-api</artifactId>
             <version>${project.version}</version>
         </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-email -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-email</artifactId>
+            <version>1.4</version>
+        </dependency>
     </dependencies>
+
+    <build>
+        <resources>
+            <resource>
+                <directory>${masterjava.config}</directory>
+                <filtering>true</filtering>
+                <includes>
+                    <include>mail.conf</include>
+                </includes>
+            </resource>
+        </resources>
+    </build>
 </project>
