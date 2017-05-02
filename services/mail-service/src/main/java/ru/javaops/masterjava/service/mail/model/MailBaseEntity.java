@@ -9,7 +9,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-abstract public class BaseEntity {
+abstract public class MailBaseEntity {
 
     @Getter
     @Setter
@@ -23,8 +23,8 @@ abstract public class BaseEntity {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        BaseEntity baseEntity = (BaseEntity) o;
-        return id != null && id.equals(baseEntity.id);
+        MailBaseEntity mailBaseEntity = (MailBaseEntity) o;
+        return id != null && id.equals(mailBaseEntity.id);
     }
 
     @Override
