@@ -20,5 +20,13 @@ public class MailServiceClient {
 
         MailService mailService = service.getPort(MailService.class);
         mailService.sendMail(ImmutableList.of(new Addressee("_rolep_@mail.ru")), ImmutableList.of(), "Subject", "Body");
+
+        mailService.sendMail(ImmutableList.of(
+                new Addressee("_rolep@mail.ru"),
+                new Addressee("Bad Email <bad_email.ru>")), ImmutableList.of(), "Subject", "Body");
+
+        mailService.sendMail(
+                ImmutableList.of(new Addressee("Григорий Кислин <_rolep_@mail.ru>")),
+                ImmutableList.of(new Addressee("Мастер Java <crazy.rolep@gmail.com")), "Subject", "Body");
     }
 }
