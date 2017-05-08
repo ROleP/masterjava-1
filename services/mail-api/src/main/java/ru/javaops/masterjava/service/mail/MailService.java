@@ -9,7 +9,7 @@ import java.util.List;
  * gkislin
  * 15.11.2016
  */
-@WebService
+@WebService(targetNamespace = "http://mail.javaops.ru/")
 public interface MailService {
 
     @WebMethod
