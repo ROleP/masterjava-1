@@ -41,7 +41,7 @@ http://localhost:8080/mail/mailService?xsd=1
         <part name="parameters" element="tns:sendMailResponse"/>
     </message>
     <portType name="MailService">
-        <operation name="sendMail">
+        <operation name="sendToGroup">
             <input wsam:Action="http://mail.javaops.ru/MailService/sendMailRequest"
                    message="tns:sendMail"/>
             <output wsam:Action="http://mail.javaops.ru/MailService/sendMailResponse"
@@ -50,7 +50,7 @@ http://localhost:8080/mail/mailService?xsd=1
     </portType>
     <binding name="MailServiceImplPortBinding" type="tns:MailService">
         <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
-        <operation name="sendMail">
+        <operation name="sendToGroup">
             <soap:operation soapAction=""/>
             <input>
                 <soap:body use="literal"/>
