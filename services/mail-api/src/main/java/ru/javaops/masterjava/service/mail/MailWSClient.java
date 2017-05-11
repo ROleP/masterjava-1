@@ -5,7 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import ru.javaops.web.WsClient;
 
 import javax.xml.namespace.QName;
-import java.util.List;
+import java.util.Set;
 
 /**
  * Created by rolep on 10/05/17.
@@ -22,8 +22,8 @@ public class MailWSClient {
         WS_CLIENT.init("mail", "/mail/mailService?wsdl");
     }
 
-    public static void sendEmail(final List<Addressee> to, final List<Addressee> cc, final String subject, final String body) {
-      log.info("Send mail to '" + to + "' cc '" + cc + "' subject '" + subject + (log.isDebugEnabled() ? "\nbody=" + body : ""));
-      WS_CLIENT.getPort().sendMail(to, cc, subject, body);
+    public static void sendEmail(final Set<Addressee> to, final Set<Addressee> cc, final String subject, final String body) {
+        log.info("Send mail to '" + to + "' cc '" + cc + "' subject '" + subject + (log.isDebugEnabled() ? "\nbody=" + body : ""));
+        WS_CLIENT.getPort().sendMail(to, cc, subject, body);
     }
 }

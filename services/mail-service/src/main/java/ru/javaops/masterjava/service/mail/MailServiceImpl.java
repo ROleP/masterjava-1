@@ -1,7 +1,7 @@
 package ru.javaops.masterjava.service.mail;
 
 import javax.jws.WebService;
-import java.util.List;
+import java.util.Set;
 
 /**
  * gkislin
@@ -9,7 +9,7 @@ import java.util.List;
  */
 @WebService(endpointInterface = "ru.javaops.masterjava.service.mail.MailService", targetNamespace = "http://mail.javaops.ru/")
 public class MailServiceImpl implements MailService {
-    public void sendMail(List<Addressee> to, List<Addressee> cc, String subject, String body) {
-        MailSender.sendMail(to, cc, subject, body);
+    public void sendMail(Set<Addressee> to, Set<Addressee> cc, String subject, String body) {
+        MailSender.sendBulk(to, cc, subject, body);
     }
 }

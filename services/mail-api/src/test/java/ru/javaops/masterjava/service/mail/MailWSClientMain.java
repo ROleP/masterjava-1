@@ -1,6 +1,6 @@
 package ru.javaops.masterjava.service.mail;
 
-import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 
 /**
  * Created by rolep on 10/05/17.
@@ -8,8 +8,8 @@ import com.google.common.collect.ImmutableList;
 public class MailWSClientMain {
     public static void main(String[] args) {
         MailWSClient.sendEmail(
-                ImmutableList.of(new Addressee("Some Name <_rolep_@mail.ru>")),
-                ImmutableList.of(new Addressee("Naother Test <crazy.rolep@gmail.com")), "Subject" , "Body"
+                ImmutableSet.of(new Addressee("Some Name <_rolep_@mail.ru>")),
+                ImmutableSet.of(new Addressee("Naother Test <crazy.rolep@gmail.com")), "Subject", "Body"
         );
     }
 }
