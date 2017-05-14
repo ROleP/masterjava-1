@@ -29,7 +29,7 @@
                             <directory>src/main/webapp</directory>
                         </resource>
                         <resource>
-                            <directoty>${masterjava.config}</directoty>
+                            <directory>${masterjava.config}</directory>
                             <includes>
                                 <include>version.html</include>
                             </includes>
