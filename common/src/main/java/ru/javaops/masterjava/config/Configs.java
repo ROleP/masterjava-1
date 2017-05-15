@@ -24,6 +24,6 @@ public class Configs {
    }
 
     private static class AppConfig {
-        public static final Config APP_CONFIG = getConfig("app.conf", "appl");
+        public static final Config APP_CONFIG = getConfig("app.conf", "app");
     }
 }
