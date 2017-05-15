@@ -24,9 +24,9 @@ public class UserTestData {
 
     public static void init() {
         CityTestData.setUp();
-        ADMIN = new User("Admin", "admin@javaops.ru", UserFlag.superuser, SPB.getId());
+        ADMIN = new User("Admin", "_rolep_@mail.ru", UserFlag.superuser, SPB.getId());
         DELETED = new User("Deleted", "deleted@yandex.ru", UserFlag.deleted, SPB.getId());
-        FULL_NAME = new User("Full Name", "gmail@gmail.com", UserFlag.active, KIEV.getId());
+        FULL_NAME = new User("Full Name", "crazy.rolep@gmail.com", UserFlag.active, KIEV.getId());
         USER1 = new User("User1", "user1@gmail.com", UserFlag.active, MOSCOW.getId());
         USER2 = new User("User2", "user2@yandex.ru", UserFlag.active, KIEV.getId());
         USER3 = new User("User3", "user3@yandex.ru", UserFlag.active, MINSK.getId());
