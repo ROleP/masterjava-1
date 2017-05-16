@@ -9,6 +9,7 @@ import ru.javaops.web.WebStateException;
 import ru.javaops.web.WsClient;
 
 import javax.xml.namespace.QName;
+import javax.xml.ws.soap.MTOMFeature;
 import java.util.List;
 import java.util.Set;
 
@@ -29,7 +30,7 @@ public class MailWSClient {
         log.info("Send mail to '" + to + "' cc '" + cc + "' subject '" + subject + (log.isDebugEnabled() ? "\nbody=" + body : ""));
         String status;
         try {
-            status = WS_CLIENT.getPort().sendToGroup(to, cc, subject, body, attaches);
+            status = getPort().sendToGroup(to, cc, subject, body, attaches);
             log.info("Sent with status: " + status);
         } catch (Exception e) {
             log.error("sendToGroup failed", e);
@@ -42,7 +43,7 @@ public class MailWSClient {
         log.info("Send mail to '" + to + "' subject '" + subject + (log.isDebugEnabled() ? "\nbody=" + body : ""));
         GroupResult result;
         try {
-            result = WS_CLIENT.getPort().sendBulk(to, subject, body, attaches);
+            result = getPort().sendBulk(to, subject, body, attaches);
         } catch (WebStateException e) {
             log.error("sendBulk failed", e);
             throw WsClient.getWebStateException(e);
@@ -54,5 +55,9 @@ public class MailWSClient {
     public static Set<Addressee> split(String addressees) {
         Iterable<String> split = Splitter.on(',').trimResults().omitEmptyStrings().split(addressees);
         return ImmutableSet.copyOf(Iterables.transform(split, Addressee::new));
+    }
+
+    private static MailService getPort() {
+        return WS_CLIENT.getPort(new MTOMFeature(1024));
     }
 }
