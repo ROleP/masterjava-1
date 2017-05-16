@@ -34,7 +34,7 @@ public class SendServlet extends HttpServlet {
         if (filePart == null) {
             attaches = ImmutableList.of();
         } else {
-            attaches = ImmutableList.of(Attachments.getAttach(filePart.getName(), filePart.getInputStream()));
+            attaches = ImmutableList.of(Attachments.getAttach(getFileName(filePart), filePart.getInputStream()));
         }
         String groupResult;
         try {
@@ -43,5 +43,16 @@ public class SendServlet extends HttpServlet {
             groupResult = e.toString();
         }
         resp.getWriter().write(groupResult);
+    }
+
+//    https://gist.github.com/cengizIO/2067999
+    private String getFileName(Part part) {
+        for (String cd : part.getHeader("content-disposition").split(";")) {
+            if (cd.trim().startsWith("filename")) {
+                return cd.substring(cd.indexOf('=') + 1).trim()
+                        .replace("\"", "");
+            }
+        }
+        return null;
     }
 }
